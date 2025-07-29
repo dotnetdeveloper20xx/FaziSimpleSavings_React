@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../state/store";
 import { createGoal, fetchGoals } from "../state/goalsSlice";
 import CreateGoalModal from "../components/CreateGoalModal";
+import { Plus } from "lucide-react";
 
 export default function DashboardPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,60 +34,76 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className='p-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold'>Your Savings Goals</h1>
-        <button className='btn btn-primary' onClick={() => setShowModal(true)}>
-          + New Goal
+    <div className='p-6 relative'>
+      {/* Heading + Add Goal */}
+      <div className='flex justify-between items-center mb-8'>
+        <h1 className='text-3xl font-bold text-gray-800'>Your Savings Goals</h1>
+        <button
+          className='btn btn-primary flex items-center gap-2'
+          onClick={() => setShowModal(true)}
+        >
+          <Plus size={18} />
+          New Goal
         </button>
       </div>
 
-      {loading && <p>Loading goals...</p>}
+      {/* Loading/Error */}
+      {loading && <p className='text-gray-600'>Loading goals...</p>}
       {error && <p className='text-red-500'>{error}</p>}
 
+      {/* Empty State */}
       {goals.length === 0 && !loading && (
-        <p className='text-center text-gray-500'>
-          You haven’t created any goals yet.
-        </p>
+        <div className='text-center text-gray-500 py-20'>
+          <p className='text-xl'>You haven’t created any goals yet.</p>
+          <p className='text-sm mt-1'>Start your savings journey now!</p>
+        </div>
       )}
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+      {/* Goals Grid */}
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {goals.map((goal) => {
           const isComplete = goal.currentAmount >= goal.targetAmount;
+
           return (
             <Link
               to={`/goal/${goal.id}`}
               key={goal.id}
-              className='card bg-white shadow-lg p-4 hover:shadow-xl relative'
+              className='card bg-white border border-gray-200 shadow-sm rounded-xl p-5 hover:shadow-md transition-all relative group'
             >
-              <h2 className='text-xl font-semibold mb-1'>{goal.name}</h2>
-              <p className='text-sm text-gray-600'>
-                £{goal.currentAmount} of £{goal.targetAmount}
+              <div className='flex justify-between items-start mb-3'>
+                <h2 className='text-lg font-semibold text-gray-800'>
+                  {goal.name}
+                </h2>
+                {isComplete && (
+                  <span className='badge badge-success text-xs'>
+                    🎉 Completed
+                  </span>
+                )}
+              </div>
+
+              <p className='text-sm text-gray-600 mb-1'>
+                £{goal.currentAmount.toFixed(2)} of £
+                {goal.targetAmount.toFixed(2)}
               </p>
+
               <progress
-                className='progress progress-success w-full mt-2'
+                className='progress progress-success w-full'
                 value={goal.currentAmount}
                 max={goal.targetAmount}
               ></progress>
-
-              {isComplete && (
-                <span className='badge badge-success absolute top-2 right-2 text-xs'>
-                  🎉 Completed
-                </span>
-              )}
             </Link>
           );
         })}
       </div>
 
-      {/* 🔁 Modal */}
+      {/* Create Goal Modal */}
       <CreateGoalModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onCreate={handleCreate}
       />
 
-      {/* 🔔 Toast */}
+      {/* Toast Notification */}
       {toast && (
         <div className='toast toast-end z-50'>
           <div

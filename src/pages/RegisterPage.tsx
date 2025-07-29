@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { RootState } from "../state/store";
 import { registerUser } from "../state/authSlice";
 
@@ -43,23 +43,37 @@ export default function RegisterPage() {
     e.preventDefault();
     const result = await dispatch(registerUser(form) as any);
     if (result.meta.requestStatus === "fulfilled") {
-      // success toast
-      alert("Registered successfully!");
+      alert("🎉 Registered successfully!");
       navigate("/dashboard");
     }
   };
 
   return (
-    <div className='max-w-md mx-auto mt-10 p-6 shadow-lg bg-white rounded'>
-      <h2 className='text-2xl font-bold mb-4'>Register</h2>
+    <div className='min-h-screen flex items-center justify-center bg-base-200 px-4'>
+      <form
+        onSubmit={handleSubmit}
+        className='bg-white w-full max-w-md p-8 rounded-xl shadow-lg space-y-5'
+      >
+        <h2 className='text-3xl font-bold text-center text-blue-600'>
+          Create an Account
+        </h2>
+        <p className='text-center text-sm text-gray-500'>
+          Join FaziSimpleSavings and start tracking your goals.
+        </p>
 
-      {error && <div className='text-red-500 mb-2'>{error}</div>}
+        {error && (
+          <div className='alert alert-error text-sm px-4 py-2 rounded'>
+            {error}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className='space-y-4'>
         <div>
+          <label className='label text-sm font-medium text-gray-700'>
+            First Name
+          </label>
           <input
             name='firstName'
-            placeholder='First Name'
+            placeholder='John'
             className='input input-bordered w-full'
             onChange={handleChange}
             onBlur={handleBlur}
@@ -70,9 +84,12 @@ export default function RegisterPage() {
         </div>
 
         <div>
+          <label className='label text-sm font-medium text-gray-700'>
+            Last Name
+          </label>
           <input
             name='lastName'
-            placeholder='Last Name'
+            placeholder='Doe'
             className='input input-bordered w-full'
             onChange={handleChange}
             onBlur={handleBlur}
@@ -83,10 +100,13 @@ export default function RegisterPage() {
         </div>
 
         <div>
+          <label className='label text-sm font-medium text-gray-700'>
+            Email
+          </label>
           <input
             name='email'
             type='email'
-            placeholder='Email'
+            placeholder='you@example.com'
             className='input input-bordered w-full'
             onChange={handleChange}
             onBlur={handleBlur}
@@ -97,10 +117,13 @@ export default function RegisterPage() {
         </div>
 
         <div>
+          <label className='label text-sm font-medium text-gray-700'>
+            Password
+          </label>
           <input
             name='password'
             type='password'
-            placeholder='Password'
+            placeholder='••••••••'
             className='input input-bordered w-full'
             onChange={handleChange}
             onBlur={handleBlur}
@@ -121,14 +144,17 @@ export default function RegisterPage() {
             "Register"
           )}
         </button>
-      </form>
 
-      <p className='text-sm text-center mt-4'>
-        Already have an account?{" "}
-        <a href='/login' className='text-blue-600 hover:underline'>
-          Login here
-        </a>
-      </p>
+        <p className='text-sm text-center text-gray-600'>
+          Already have an account?{" "}
+          <Link
+            to='/login'
+            className='text-blue-600 hover:underline font-medium'
+          >
+            Login here
+          </Link>
+        </p>
+      </form>
     </div>
   );
 }

@@ -1,19 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../state/store";
 import { loginSuccess } from "../state/authSlice";
 import { login } from "../core/services/authService";
-
-import { Link } from "react-router-dom";
-
-// Inside your JSX:
-<p className='text-sm text-center mt-4'>
-  Don't have an account?{" "}
-  <Link to='/register' className='text-blue-600 hover:underline'>
-    Register here
-  </Link>
-</p>;
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,8 +19,8 @@ export default function LoginPage() {
 
     try {
       const response = await login(email, password);
-      const token = response.data.data; // Assuming your API returns { data: token }
-      const user = { email }; // Optional: replace with actual user data if available
+      const token = response.data.data;
+      const user = { email };
 
       dispatch(loginSuccess({ token, user }));
       navigate("/dashboard");
@@ -41,19 +31,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
+    <div className='min-h-screen flex items-center justify-center bg-base-200 px-4'>
       <form
         onSubmit={handleSubmit}
-        className='bg-white p-8 rounded shadow-md w-full max-w-md space-y-4'
+        className='bg-white w-full max-w-md p-8 rounded-xl shadow-lg space-y-5'
       >
-        <h2 className='text-2xl font-bold text-center text-blue-600'>Login</h2>
+        <h2 className='text-3xl font-bold text-center text-blue-600'>
+          Welcome Back 👋
+        </h2>
+        <p className='text-center text-sm text-gray-500'>
+          Please enter your credentials to access your dashboard.
+        </p>
 
-        {error && <div className='alert alert-error'>{error}</div>}
+        {error && (
+          <div className='alert alert-error text-sm px-4 py-2 rounded'>
+            {error}
+          </div>
+        )}
 
         <div>
-          <label className='label'>Email</label>
+          <label
+            htmlFor='email'
+            className='label text-sm font-medium text-gray-700'
+          >
+            Email
+          </label>
           <input
+            id='email'
             type='email'
+            placeholder='you@example.com'
             required
             className='input input-bordered w-full'
             value={email}
@@ -62,9 +68,16 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <label className='label'>Password</label>
+          <label
+            htmlFor='password'
+            className='label text-sm font-medium text-gray-700'
+          >
+            Password
+          </label>
           <input
+            id='password'
             type='password'
+            placeholder='••••••••'
             required
             className='input input-bordered w-full'
             value={password}
@@ -76,9 +89,12 @@ export default function LoginPage() {
           Login
         </button>
 
-        <p className='text-sm text-center mt-4'>
+        <p className='text-sm text-center mt-2 text-gray-600'>
           Don't have an account?{" "}
-          <Link to='/register' className='text-blue-600 hover:underline'>
+          <Link
+            to='/register'
+            className='text-blue-600 hover:underline font-medium'
+          >
             Register here
           </Link>
         </p>

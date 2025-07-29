@@ -6,6 +6,25 @@ import {
 } from "../state/notificationsSlice";
 import { RootState, AppDispatch } from "../state/store";
 
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+  const isYesterday =
+    date.toDateString() ===
+    new Date(now.setDate(now.getDate() - 1)).toDateString();
+
+  if (isToday) return "Today";
+  if (isYesterday) return "Yesterday";
+
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export default function NotificationsPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading, error } = useSelector(
@@ -32,29 +51,33 @@ export default function NotificationsPage() {
 
   return (
     <div className='p-6'>
-      <h1 className='text-2xl font-bold mb-4'>Notifications</h1>
+      <h1 className='text-3xl font-bold mb-6'>Notifications</h1>
 
-      {loading && <p>Loading notifications...</p>}
+      {loading && <p className='text-gray-600'>Loading notifications...</p>}
       {error && <p className='text-red-500'>{error}</p>}
 
-      <ul className='space-y-3'>
+      {items.length === 0 && !loading && (
+        <p className='text-gray-500 text-center'>You have no notifications.</p>
+      )}
+
+      <ul className='space-y-4'>
         {items.map((n) => (
           <li
             key={n.id}
-            className={`p-4 rounded border shadow-sm flex justify-between items-center ${
-              n.isRead ? "bg-gray-100" : "bg-white"
+            className={`p-4 rounded-lg shadow-sm border flex justify-between items-start gap-4 relative ${
+              n.isRead ? "bg-gray-100" : "bg-white border-l-4 border-blue-500"
             }`}
           >
-            <div>
+            <div className='flex-1'>
               <p
-                className={`font-medium ${
-                  n.isRead ? "text-gray-500" : "text-black"
+                className={`mb-1 font-medium text-sm ${
+                  n.isRead ? "text-gray-500" : "text-gray-800"
                 }`}
               >
                 {n.message}
               </p>
               <p className='text-xs text-gray-400'>
-                {new Date(n.notificationDate).toLocaleString()}
+                {formatDate(n.notificationDate)}
               </p>
             </div>
 
