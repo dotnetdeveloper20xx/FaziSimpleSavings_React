@@ -91,8 +91,12 @@ export default function GoalDetailsPage() {
           {transactions.map((tx) => (
             <li key={tx.transactionId} className='border p-2 rounded shadow-sm'>
               <span className='font-bold'>£{tx.amount}</span> on{" "}
-              {new Date(tx.date).toLocaleDateString()}
-            </li>
+              {new Date(tx.date ?? "").toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </li>            
           ))}
         </ul>
       )}
