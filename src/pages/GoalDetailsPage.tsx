@@ -59,9 +59,19 @@ export default function GoalDetailsPage() {
 
   if (!goal) return <p className='p-6'>Loading goal details...</p>;
 
+  const isGoalComplete = goal.currentAmount >= goal.targetAmount;
+
   return (
     <div className='p-6'>
-      <h1 className='text-2xl font-bold mb-2'>{goal.name}</h1>
+      <div className='flex items-center justify-between mb-2'>
+        <h1 className='text-2xl font-bold'>{goal.name}</h1>
+        {isGoalComplete && (
+          <span className='badge badge-success text-white'>
+            🎉 Goal Completed
+          </span>
+        )}
+      </div>
+
       <p className='text-gray-700 mb-1'>
         £{goal.currentAmount} of £{goal.targetAmount}
       </p>
@@ -79,9 +89,18 @@ export default function GoalDetailsPage() {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           className='input input-bordered'
+          disabled={isGoalComplete}
         />
-        <button className='btn btn-primary'>Deposit</button>
+        <button className='btn btn-primary' disabled={isGoalComplete}>
+          Deposit
+        </button>
       </form>
+
+      {isGoalComplete && (
+        <p className='text-green-600 font-semibold mb-4'>
+          🎉 You’ve reached your target. No more deposits allowed.
+        </p>
+      )}
 
       <h2 className='text-lg font-semibold mb-2'>Transaction History</h2>
       {transactions.length === 0 ? (
@@ -96,7 +115,7 @@ export default function GoalDetailsPage() {
                 month: "short",
                 day: "numeric",
               })}
-            </li>            
+            </li>
           ))}
         </ul>
       )}

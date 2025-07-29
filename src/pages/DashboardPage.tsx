@@ -44,24 +44,39 @@ export default function DashboardPage() {
       {loading && <p>Loading goals...</p>}
       {error && <p className='text-red-500'>{error}</p>}
 
+      {goals.length === 0 && !loading && (
+        <p className='text-center text-gray-500'>
+          You haven’t created any goals yet.
+        </p>
+      )}
+
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {goals.map((goal) => (
-          <Link
-            to={`/goal/${goal.id}`}
-            key={goal.id}
-            className='card bg-white shadow-lg p-4 hover:shadow-xl'
-          >
-            <h2 className='text-xl font-semibold'>{goal.name}</h2>
-            <p className='text-sm text-gray-600'>
-              £{goal.currentAmount} of £{goal.targetAmount}
-            </p>
-            <progress
-              className='progress progress-success w-full mt-2'
-              value={goal.currentAmount}
-              max={goal.targetAmount}
-            ></progress>
-          </Link>
-        ))}
+        {goals.map((goal) => {
+          const isComplete = goal.currentAmount >= goal.targetAmount;
+          return (
+            <Link
+              to={`/goal/${goal.id}`}
+              key={goal.id}
+              className='card bg-white shadow-lg p-4 hover:shadow-xl relative'
+            >
+              <h2 className='text-xl font-semibold mb-1'>{goal.name}</h2>
+              <p className='text-sm text-gray-600'>
+                £{goal.currentAmount} of £{goal.targetAmount}
+              </p>
+              <progress
+                className='progress progress-success w-full mt-2'
+                value={goal.currentAmount}
+                max={goal.targetAmount}
+              ></progress>
+
+              {isComplete && (
+                <span className='badge badge-success absolute top-2 right-2 text-xs'>
+                  🎉 Completed
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </div>
 
       {/* 🔁 Modal */}

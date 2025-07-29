@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import GoalDetailsPage from "./pages/GoalDetailsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import SettingsPage from "./pages/SettingsPage";
+import LandingPage from "./pages/LandingPage"; // ✅ new
 
 // Auth Guard
 import ProtectedRoute from "./core/ProtectedRoute";
@@ -18,6 +19,7 @@ function App() {
   return (
     <Routes>
       {/* Public routes */}
+      <Route path='/' element={<LandingPage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/register' element={<RegisterPage />} />
 
@@ -30,16 +32,6 @@ function App() {
           <Route path='/settings' element={<SettingsPage />} />
         </Route>
       </Route>
-
-      {/* Fallback: Home (public) */}
-      <Route
-        path='/'
-        element={
-          <h1 className='text-center p-10 text-2xl'>
-            Welcome to FaziSimpleSavings
-          </h1>
-        }
-      />
     </Routes>
   );
 }
