@@ -1,5 +1,7 @@
 export default function LoginPage() {
   return (
-    <div className='p-10 text-center text-xl'>🔐 This is the Login Page</div>
+    <div className='flex justify-center items-center h-screen'>
+      <button className='btn btn-primary'>Login with DaisyUI</button>
+    </div>
   );
 }
