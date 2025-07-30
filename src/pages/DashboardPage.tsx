@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../state/store";
 import { createGoal, fetchGoals } from "../state/goalsSlice";
 import CreateGoalModal from "../components/CreateGoalModal";
+import ToastNotification from "../components/ToastNotification";
+import GoalCard from "../components/GoalCard";
+import EmptyState from "../components/EmptyState";
 import { Plus } from "lucide-react";
 
 export default function DashboardPage() {
@@ -35,7 +37,6 @@ export default function DashboardPage() {
 
   return (
     <div className='p-6 relative'>
-      {/* Heading + Add Goal */}
       <div className='flex justify-between items-center mb-8'>
         <h1 className='text-3xl font-bold text-gray-800'>Your Savings Goals</h1>
         <button
@@ -47,74 +48,28 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* Loading/Error */}
       {loading && <p className='text-gray-600'>Loading goals...</p>}
       {error && <p className='text-red-500'>{error}</p>}
+      {goals.length === 0 && !loading && <EmptyState />}
 
-      {/* Empty State */}
-      {goals.length === 0 && !loading && (
-        <div className='text-center text-gray-500 py-20'>
-          <p className='text-xl'>You haven’t created any goals yet.</p>
-          <p className='text-sm mt-1'>Start your savings journey now!</p>
-        </div>
-      )}
-
-      {/* Goals Grid */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {goals.map((goal) => {
-          const isComplete = goal.currentAmount >= goal.targetAmount;
-
-          return (
-            <Link
-              to={`/goal/${goal.id}`}
-              key={goal.id}
-              className='card bg-white border border-gray-200 shadow-sm rounded-xl p-5 hover:shadow-md transition-all relative group'
-            >
-              <div className='flex justify-between items-start mb-3'>
-                <h2 className='text-lg font-semibold text-gray-800'>
-                  {goal.name}
-                </h2>
-                {isComplete && (
-                  <span className='badge badge-success text-xs'>
-                    🎉 Completed
-                  </span>
-                )}
-              </div>
-
-              <p className='text-sm text-gray-600 mb-1'>
-                £{goal.currentAmount.toFixed(2)} of £
-                {goal.targetAmount.toFixed(2)}
-              </p>
-
-              <progress
-                className='progress progress-success w-full'
-                value={goal.currentAmount}
-                max={goal.targetAmount}
-              ></progress>
-            </Link>
-          );
-        })}
+        {goals.map((goal) => (
+          <GoalCard key={goal.id} {...goal} />
+        ))}
       </div>
 
-      {/* Create Goal Modal */}
       <CreateGoalModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onCreate={handleCreate}
       />
 
-      {/* Toast Notification */}
       {toast && (
-        <div className='toast toast-end z-50'>
-          <div
-            className={`alert ${
-              toast.type === "success" ? "alert-success" : "alert-error"
-            }`}
-            onClick={() => setToast(null)}
-          >
-            <span>{toast.message}</span>
-          </div>
-        </div>
+        <ToastNotification
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );

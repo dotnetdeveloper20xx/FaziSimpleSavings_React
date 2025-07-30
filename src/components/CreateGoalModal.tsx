@@ -16,9 +16,9 @@ export default function CreateGoalModal({ isOpen, onClose, onCreate }: Props) {
 
   const validate = () => {
     const newErrors: typeof errors = {};
-    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.name.trim()) newErrors.name = "Please enter a goal name";
     if (!form.targetAmount || Number(form.targetAmount) <= 0) {
-      newErrors.targetAmount = "Target amount must be a positive number";
+      newErrors.targetAmount = "Target amount must be greater than 0";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -67,7 +67,14 @@ export default function CreateGoalModal({ isOpen, onClose, onCreate }: Props) {
                 </Dialog.Title>
                 <form onSubmit={handleSubmit} className='space-y-4'>
                   <div>
+                    <label
+                      htmlFor='goalName'
+                      className='block font-medium mb-1'
+                    >
+                      Goal Name
+                    </label>
                     <input
+                      id='goalName'
                       name='name'
                       placeholder='Goal Name'
                       className='input input-bordered w-full'
@@ -81,7 +88,14 @@ export default function CreateGoalModal({ isOpen, onClose, onCreate }: Props) {
                     )}
                   </div>
                   <div>
+                    <label
+                      htmlFor='goalAmount'
+                      className='block font-medium mb-1'
+                    >
+                      Target Amount
+                    </label>
                     <input
+                      id='goalAmount'
                       name='targetAmount'
                       type='number'
                       placeholder='Target Amount'
