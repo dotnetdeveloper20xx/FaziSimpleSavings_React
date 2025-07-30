@@ -14,6 +14,7 @@ import LandingPage from "./pages/LandingPage"; // ✅ new
 
 // Auth Guard
 import ProtectedRoute from "./core/ProtectedRoute";
+import GroupGoalForm from "./components/GroupGoalForm";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='/goal/:id' element={<GoalDetailsPage />} />
           <Route path='/notifications' element={<NotificationsPage />} />
           <Route path='/settings' element={<SettingsPage />} />
+          <Route path='/group-goals/create' element={<GroupGoalForm />} />
         </Route>
       </Route>
     </Routes>
