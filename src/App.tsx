@@ -10,7 +10,9 @@ import DashboardPage from "./pages/DashboardPage";
 import GoalDetailsPage from "./pages/GoalDetailsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import SettingsPage from "./pages/SettingsPage";
-import LandingPage from "./pages/LandingPage"; // ✅ new
+import LandingPage from "./pages/LandingPage";
+import GroupGoalDetailPage from "./pages/GroupGoalDetailPage";
+import GroupGoalsDashboard from "./pages/GroupGoalsDashboard";
 
 // Auth Guard
 import ProtectedRoute from "./core/ProtectedRoute";
@@ -31,9 +33,14 @@ function App() {
           <Route path='/goal/:id' element={<GoalDetailsPage />} />
           <Route path='/notifications' element={<NotificationsPage />} />
           <Route path='/settings' element={<SettingsPage />} />
+
+          {/* 👥 Group Goals */}
+          <Route path='/group-goals' element={<GroupGoalsDashboard />} />
           <Route path='/group-goals/create' element={<GroupGoalForm />} />
+          <Route path='/group-goals/:id' element={<GroupGoalDetailPage />} />
         </Route>
       </Route>
+      <Route path='*' element={<div>404 Not Found</div>} />
     </Routes>
   );
 }
